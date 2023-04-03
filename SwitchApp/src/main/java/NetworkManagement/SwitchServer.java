@@ -18,6 +18,8 @@ public class SwitchServer {
         while(true) {
             Socket socket = serverSocket.accept();
             System.out.println("New Client Conencted: " + socket.toString());
+            System.out.println("ip: " + socket.getInetAddress());
+
 
             // get the input stream from the connected socket
             InputStream input = socket.getInputStream();
