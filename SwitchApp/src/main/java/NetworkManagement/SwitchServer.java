@@ -3,13 +3,12 @@ package NetworkManagement;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 
-public class ServerPrueba {
+public class SwitchServer {
     int PORT;
     ServerSocket serverSocket;
 
-    public ServerPrueba(int PORT) throws IOException {
+    public SwitchServer(int PORT) throws IOException {
         this.PORT= PORT;
         this.serverSocket = new ServerSocket(PORT);
     }
