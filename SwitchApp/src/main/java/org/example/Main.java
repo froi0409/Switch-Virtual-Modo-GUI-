@@ -11,6 +11,8 @@ public class Main {
             server.startServer();
         } catch (IOException e) {
             System.err.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("ClassNF Error: " + e.getMessage());
         }
     }
 }

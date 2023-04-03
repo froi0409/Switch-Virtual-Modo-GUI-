@@ -1,8 +1,6 @@
 package NetworkManagement;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
@@ -16,15 +14,20 @@ public class ServerPrueba {
         this.serverSocket = new ServerSocket(PORT);
     }
 
-    public void startServer() throws IOException {
+    public void startServer() throws IOException, ClassNotFoundException {
         System.out.println("Servidor iniciado en puerto " + PORT + "...");
         while(true) {
             Socket socket = serverSocket.accept();
-            System.out.println("New Client Conencted");
-            OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
+            System.out.println("New Client Conencted: " + socket.toString());
 
-            writer.println(new Date().toString());
+            // get the input stream from the connected socket
+            InputStream input = socket.getInputStream();
+            ObjectInputStream objectInputStream = new ObjectInputStream(input);
+
+            // Get the object
+            NetworkFrame frame = (NetworkFrame) objectInputStream.readObject();
+            System.out.println("Mensaje recibido: " + frame.getText());
+
         }
     }
 }

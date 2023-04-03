@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.sql.SQLOutput;
 
 import NetworkManagement.Client;
+import NetworkManagement.NetworkFrame;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Mensaje: " + txtMessage.getText());
-                Client client = new Client(SERVER_IP, SERVER_PORT);
+                String message = txtMessage.getText().toString();
+
+                // Create NetworkFrame
+                NetworkFrame frame = new NetworkFrame(message);
+
+                Client client = new Client(SERVER_IP, SERVER_PORT, frame);
                 client.run();
 
             }
