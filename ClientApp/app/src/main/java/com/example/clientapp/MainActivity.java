@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
 
     private AddressManager addressManager = new AddressManager();
     private EditText txtMessage;
+    private EditText txtMacDestiny;
     private FloatingActionButton btnSend;
     private Button btnSetMacAddress;
     private EditText txtTextArea;
@@ -40,15 +41,18 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         btnSetMacAddress = findViewById(R.id.btnSetMacAddress);
         txtMessage = (EditText) findViewById(R.id.txtMessage);
         txtTextArea = findViewById(R.id.txtTextArea);
-
+        txtMacDestiny = findViewById(R.id.txtMacDestiny);
 
         // Setting the Text color of the EditText
         txtMessage.setTextColor(Color.parseColor("#B66d38"));
         txtTextArea.setTextColor(Color.BLACK);
-
+        txtMacDestiny.setBackgroundColor(Color.parseColor("#EAE2CC"));
+        txtMacDestiny.setTextColor(Color.parseColor("#336b6f"));
+        txtMacDestiny.setHintTextColor(Color.parseColor("#336b6f"));
         txtTextArea.setText("Salida:\n");
         txtTextArea.append("Aquí se muestran los mensajes:\n");
         txtMessage.setText("");
+        txtMacDestiny.setText("");
 
         // Variables
         String SERVER_IP = "192.168.137.1";
@@ -60,16 +64,21 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
             public void onClick(View view) {
                 if(MAC != null) {
                     String message = txtMessage.getText().toString();
+                    String[] macDestiny = txtMacDestiny.getText().toString().split(":");
+                    if(addressManager.isMacAdress(macDestiny)) {
+                        // Create NetworkFrame
+                        NetworkFrame frame = new NetworkFrame(message, addressManager.getMacAddress(MAC), addressManager.getMacAddress(macDestiny));
 
-                    // Create NetworkFrame
-                    NetworkFrame frame = new NetworkFrame(message);
-
-                    Client client = new Client(SERVER_IP, SERVER_PORT, frame);
-                    client.run();
+                        Client client = new Client(SERVER_IP, SERVER_PORT, frame);
+                        client.run();
 
 
-                    txtMessage.setText("");
-                    txtTextArea.append(message + "\n");
+                        txtMessage.setText("");
+                        txtTextArea.append(message + "\n");
+                    } else {
+                        // Invalid MAC destiny message
+                        toastNotification("Dirección MAC de destino inválida");
+                    }
                 } else {
                     // Invalid MAC message
                     toastNotification("Dirección MAC no establecida");
@@ -117,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         String macAux = addressManager.getMacAddress(macAddress);
         MAC = macAddress;
         btnSetMacAddress.setText("MAC: " + macAux);
-
     }
 
     private void toastNotification(String message) {

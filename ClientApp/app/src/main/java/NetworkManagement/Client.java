@@ -39,7 +39,6 @@ public class Client implements Runnable{
             objectOutputStream.writeObject(frame);
             System.out.println("Trama Enviada a Switch");
 
-            socket.close();
             output.close();
             objectOutputStream.close();
         } catch(IOException e) {

@@ -8,7 +8,7 @@ public class AddressManager {
 
     private static final Pattern HEXADECIMAL_PATTERN = Pattern.compile("\\p{XDigit}+");
     public boolean isMacAdress(String[] macAddress) {
-        if(macAddress.length > 6) {
+        if(macAddress.length != 6) {
             return false; // MAC Address only has 6 hexadecimal digits
         } else {
             // Check if each value is hexadecimal

@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 public class NetworkFrame implements Serializable {
     private String message;
+    private String macOrigin;
+    private String macDestiny;
     private int type;
 
     public NetworkFrame(int type) {
@@ -15,9 +17,10 @@ public class NetworkFrame implements Serializable {
             this.message = "Buscando Dispositivos en la tabla ARP";
         }
     }
-    public NetworkFrame(String message) {
-
+    public NetworkFrame(String message, String macOrigin, String macDestiny) {
         this.message = message;
+        this.macOrigin = macOrigin;
+        this.macDestiny = macDestiny;
     }
 
     public String getMessage() {
@@ -26,5 +29,13 @@ public class NetworkFrame implements Serializable {
 
     public int getType() {
         return type;
+    }
+
+    public String getMacOrigin() {
+        return macOrigin;
+    }
+
+    public String getMacDestiny() {
+        return macDestiny;
     }
 }
