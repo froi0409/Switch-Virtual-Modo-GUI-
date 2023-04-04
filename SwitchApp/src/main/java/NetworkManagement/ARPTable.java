@@ -5,12 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ARPTable {
-    private HashMap<String, String> arpTable;
-    public ARPTable () {
-        arpTable = new HashMap<>();
+
+    private ArrayList<ARPNode> arpTable;
+
+    public ARPTable() {
+        arpTable = new ArrayList<>();
     }
 
-    public void insertDevice(String mac, String ip) {
-        arpTable.put(mac, ip);
+    public boolean addDevide(ARPNode node) {
+        // verify that the MAC address is not added
+        for (ARPNode arpNode: arpTable) {
+            if(node.getMac().equals(arpNode.getMac())) {
+                return false;
+            }
+        }
+        arpTable.add(node);
+        return true;
     }
+
 }
