@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
     private EditText txtMacDestiny;
     private FloatingActionButton btnSend;
     private Button btnSetMacAddress;
+    private ToggleButton btnConnect;
     private EditText txtTextArea;
     private Thread thread1;
     private String[] MAC;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         // ViewsById
         btnSend = findViewById(R.id.btnSend);
         btnSetMacAddress = findViewById(R.id.btnSetMacAddress);
+        btnConnect = findViewById(R.id.btnConnect);
         txtMessage = (EditText) findViewById(R.id.txtMessage);
         txtTextArea = findViewById(R.id.txtTextArea);
         txtMacDestiny = findViewById(R.id.txtMacDestiny);
@@ -92,6 +96,24 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                 MACAddressDialog dialog = new MACAddressDialog();
                 dialog.show(getSupportFragmentManager(), "MAC Address");
                 System.out.println("Se mostró el cuadro de diálogo");
+            }
+        });
+
+        btnConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    System.out.println("Estableciendo Conexión al Switch");
+                    if(MAC != null && addressManager.isMacAdress(MAC)) {
+                        btnSetMacAddress.setEnabled(false);
+                    } else {
+                        toastNotification("MAC Origen Inválida");
+                        btnConnect.setChecked(false);
+                    }
+                } else {
+                    System.out.println("Desconectando del Switch");
+                    btnSetMacAddress.setEnabled(true);
+                }
             }
         });
 
