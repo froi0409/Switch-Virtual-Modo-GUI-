@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                     txtTextArea.append(message + "\n");
                 } else {
                     // Invalid MAC message
+                    toastNotification("Dirección MAC no establecida");
                 }
             }
         });
@@ -108,12 +109,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
            setMAC(macAux);
         } else {
             // Notify the invalid MAC address format
-            Context context = getApplicationContext();
-            CharSequence text = "Formato de dirección MAC inválido";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+            toastNotification("Formato de dirección MAC inválido");
         }
     }
 
@@ -124,4 +120,11 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
 
     }
 
+    private void toastNotification(String message) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
+    }
 }
