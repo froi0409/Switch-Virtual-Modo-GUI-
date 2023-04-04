@@ -27,7 +27,7 @@ public class SwitchServer {
 
             // Get the object
             NetworkFrame frame = (NetworkFrame) objectInputStream.readObject();
-            System.out.println("Mensaje recibido: " + frame.getText());
+            System.out.println("Mensaje recibido: " + frame.getMessage());
 
         }
     }
