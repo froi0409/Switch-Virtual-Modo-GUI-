@@ -24,14 +24,13 @@ import UIManagement.MACAddressDialog;
 
 public class MainActivity extends AppCompatActivity implements MACAddressDialog.MACAddressListener {
 
-    private AddressManager addressManager = new AddressManager();
-    private EditText txtMessage;
-    private EditText txtMacDestiny;
-    private FloatingActionButton btnSend;
-    private Button btnSetMacAddress;
-    private ToggleButton btnConnect;
-    private EditText txtTextArea;
-    private Thread thread1;
+    AddressManager addressManager = new AddressManager();
+    EditText txtMessage;
+    EditText txtMacDestiny;
+    FloatingActionButton btnSend;
+    Button btnSetMacAddress;
+    ToggleButton btnConnect;
+    EditText txtTextArea;
     private String[] MAC;
 
     @Override
@@ -156,5 +155,9 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
 
         Toast toast = Toast.makeText(context, message, duration);
         toast.show();
+    }
+
+    public void appendText(String text) {
+        txtTextArea.append(text);
     }
 }

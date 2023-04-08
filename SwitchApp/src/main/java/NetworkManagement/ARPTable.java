@@ -12,7 +12,7 @@ public class ARPTable {
         arpTable = new ArrayList<>();
     }
 
-    public boolean addDevide(ARPNode node) {
+    public boolean addDevice(ARPNode node) {
         // verify that the MAC address is not added
         for (ARPNode arpNode: arpTable) {
             if(node.getMac().equals(arpNode.getMac())) {

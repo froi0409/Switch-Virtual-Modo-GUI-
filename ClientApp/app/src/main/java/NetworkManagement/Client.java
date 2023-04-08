@@ -10,8 +10,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class Client implements Runnable{
-    private String SERVER_IP;
-    private int SERVER_PORT;
+    private String serverIp;
+    private int serverPort;
     private NetworkFrame frame;
 
 
@@ -20,15 +20,15 @@ public class Client implements Runnable{
         connect();
     }
 
-    public Client(String SERVER_IP, int SERVER_PORT, NetworkFrame frame) {
-        this.SERVER_IP = SERVER_IP;
-        this.SERVER_PORT = SERVER_PORT;
+    public Client(String serverIp, int serverPort, NetworkFrame frame) {
+        this.serverIp = serverIp;
+        this.serverPort = serverPort;
         this.frame = frame;
     }
 
     private void connect() {
         System.out.println("Estableciendo Conexión");
-        try (Socket socket = new Socket(SERVER_IP, SERVER_PORT)) {
+        try (Socket socket = new Socket(serverIp, serverPort)) {
 
             System.out.println("Conexión Establecida");
 
