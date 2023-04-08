@@ -17,6 +17,9 @@ public class SwitchServer {
         this.serverAppUI = serverAppUI;
         this.serverSocket = new ServerSocket(PORT);
         this.arpTable = new ARPTable();
+
+        // set ARP Table in user interface
+        serverAppUI.setArpTable(this.arpTable);
     }
 
     public void startServer() throws IOException, ClassNotFoundException {

@@ -1,5 +1,6 @@
 package NetworkManagement;
 
+import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,22 @@ public class ARPTable {
         }
         arpTable.add(node);
         return true;
+    }
+
+    public DefaultTableModel getTableModel() {
+        String[] columnTitles = {"Interface (IP)", "MAC Address"};
+        String[] devices = new String[2];
+
+        DefaultTableModel model = new DefaultTableModel();
+
+        for(ARPNode node : arpTable) {
+            devices[0] = node.getIp();
+            devices[1] = node.getMac();
+
+            model.addRow(devices);
+        }
+
+        return model;
     }
 
 }

@@ -4,18 +4,31 @@
  */
 package UI;
 
+import NetworkManagement.ARPNode;
+import NetworkManagement.ARPTable;
+
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ferru
  */
 public class ServerAppUI extends javax.swing.JFrame {
 
+    private ARPTable arpTable;
+
+    public void setArpTable(ARPTable arpTable) {
+        this.arpTable = arpTable;
+    }
+
     /**
      * Creates new form ServerAppUI
      */
     public ServerAppUI() {
         initComponents();
+        arpTable = new ARPTable();
         this.setLocationRelativeTo(null);
+        updateArpTable();
     }
 
     /**
@@ -180,6 +193,10 @@ public class ServerAppUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>
+
+    public void updateArpTable() {
+        tblArp.setModel(arpTable.getTableModel());
+    }
 
     private void txtUnicastMessageActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
