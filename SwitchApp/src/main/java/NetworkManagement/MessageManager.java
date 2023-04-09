@@ -18,7 +18,6 @@ public class MessageManager implements Runnable {
     @Override
     public void run() {
         connect();
-        serverAppUI.updateArpTable();
     }
 
     public MessageManager(String macAddress, NetworkFrame frame, String clientIp, int clientPort, ServerAppUI serverAppUI) {

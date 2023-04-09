@@ -15,10 +15,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ServerAppUI extends javax.swing.JFrame {
 
-    private ARPTable arpTable;
+    public void setArpTable() {
 
-    public void setArpTable(ARPTable arpTable) {
-        this.arpTable = arpTable;
     }
 
     /**
@@ -26,9 +24,7 @@ public class ServerAppUI extends javax.swing.JFrame {
      */
     public ServerAppUI() {
         initComponents();
-        arpTable = new ARPTable();
         this.setLocationRelativeTo(null);
-        updateArpTable();
     }
 
     /**
@@ -194,8 +190,8 @@ public class ServerAppUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-    public void updateArpTable() {
-        tblArp.setModel(arpTable.getTableModel());
+    public void updateArpTable(DefaultTableModel model) {
+        tblArp.setModel(model);
     }
 
     private void txtUnicastMessageActionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,6 +213,7 @@ public class ServerAppUI extends javax.swing.JFrame {
     private void btnSendBroadcastActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
+
 
     /**
      * @param args the command line arguments

@@ -7,19 +7,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SwitchServer {
+    private int clientServerPort;
     private int PORT;
     private ServerSocket serverSocket;
     private ARPTable arpTable;
     private ServerAppUI serverAppUI;
 
     public SwitchServer(int PORT, ServerAppUI serverAppUI) throws IOException {
-        this.PORT= PORT;
+        this.PORT = PORT;
         this.serverAppUI = serverAppUI;
         this.serverSocket = new ServerSocket(PORT);
-        this.arpTable = new ARPTable();
+        this.arpTable = new ARPTable(serverAppUI);
+        this.clientServerPort = 9090;
 
-        // set ARP Table in user interface
-        serverAppUI.setArpTable(this.arpTable);
     }
 
     public void startServer() throws IOException, ClassNotFoundException {
@@ -37,11 +37,11 @@ public class SwitchServer {
 
             // Get the object
             NetworkFrame frame = (NetworkFrame) objectInputStream.readObject();
-            System.out.println("New Client Conencted: " + socket.toString());
-            System.out.println("Interface/ip: " + ip);
-            System.out.println("MAC Origen: " + frame.getMacOrigin());
-            System.out.println("MAC Destino: " + frame.getMacDestiny());
-            System.out.println("Mensaje recibido: " + frame.getMessage());
+//            System.out.println("New Client Conencted: " + socket.toString());
+//            System.out.println("Interface/ip: " + ip);
+//            System.out.println("MAC Origen: " + frame.getMacOrigin());
+//            System.out.println("MAC Destino: " + frame.getMacDestiny());
+//            System.out.println("Mensaje recibido: " + frame.getMessage());
 
 
             if(frame.getType() == 1) {
@@ -50,10 +50,13 @@ public class SwitchServer {
                     System.out.println("Dispositivo agregado a tabla ARP con éxito");
                     NetworkFrame secondaryFrame = new NetworkFrame(1, frame.getMacOrigin());
                     secondaryFrame.setMessage("La conexión se realizó con éxito");
-                    MessageManager manager = new MessageManager(frame.getMacOrigin(), secondaryFrame, ip, 6000, serverAppUI);
+                    MessageManager manager = new MessageManager(frame.getMacOrigin(), secondaryFrame, ip, clientServerPort, serverAppUI);
                     manager.run();
-                } else {
-                    System.err.println("Error al aguregar dispositivo a la tabla ARP");
+                } else { // Cannot add device
+                    NetworkFrame secondaryFrame = new NetworkFrame(5, frame.getMacOrigin());
+                    secondaryFrame.setMessage("No se pudo agregar el dispositivo a la tabla ARP.");
+                    MessageManager manager = new MessageManager(frame.getMacOrigin(), secondaryFrame, ip, clientServerPort, serverAppUI);
+                    manager.run();
                 }
             }
 

@@ -180,30 +180,51 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         public void run() {
             System.out.println("Antes del XD");
             try {
-                System.out.println("XDDDDD");
-                serverSocket = new ServerSocket(6000);
-                System.out.println("Escuchando en 6000...");
+                serverSocket = new ServerSocket(9090);
+                System.out.println("Escuchando en 9090...");
                 while(true) {
-                    System.out.println(":D");
                     Socket socket = serverSocket.accept();
-                    System.out.println(":o");
+
 
                     // get the input stream from the connected socket
                     InputStream input = socket.getInputStream();
                     ObjectInputStream objectInputStream = new ObjectInputStream(input);
 
-                    // get the object (Network Frame)
-                    NetworkFrame frame = (NetworkFrame) objectInputStream.readObject();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // get the object (Network Frame)
+                            NetworkFrame frame = null;
+                            try {
+                                frame = (NetworkFrame) objectInputStream.readObject();
+                                EditText txtArea = (EditText) findViewById(R.id.txtTextArea);
+
+                                if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
+                                    //txtTextArea.append(frame.renderMessage());
+                                } else if(frame.getType() == 1) {                   // Add device response
+                                    //txtTextArea.append(frame.getMessage());
+                                    txtArea.append(frame.getMessage());
+                                } else if(frame.getType() == 5) {
+                                    ToggleButton btnConnect = (ToggleButton) findViewById(R.id.btnConnect);
+                                    Button btnSetMacAddress = (Button) findViewById(R.id.btnSetMacAddress);
+
+                                    // set initial properties
+                                    btnConnect.setChecked(false);
+                                    btnSetMacAddress.setEnabled(true);
+                                    txtArea.append(frame.getMessage());
+                                }
 
 
-                    if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
-                        txtTextArea.append(frame.renderMessage());
-                    } else if(frame.getType() == 1) {                   // Add device response
-                        txtTextArea.append(frame.getMessage());
-                    }
+
+                                socket.close();
+                            } catch (ClassNotFoundException | IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    });
 
                 }
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
