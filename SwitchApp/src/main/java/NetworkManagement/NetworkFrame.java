@@ -36,6 +36,10 @@ public class NetworkFrame implements Serializable {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public int getType() {
         return type;
     }

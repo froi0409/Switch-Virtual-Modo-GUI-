@@ -48,7 +48,10 @@ public class SwitchServer {
                 ARPNode node = new ARPNode(ip, port, frame.getMacOrigin(), false);
                 if(arpTable.addDevice(node)) {
                     System.out.println("Dispositivo agregado a tabla ARP con éxito");
-
+                    NetworkFrame secondaryFrame = new NetworkFrame(1, frame.getMacOrigin());
+                    secondaryFrame.setMessage("La conexión se realizó con éxito");
+                    MessageManager manager = new MessageManager(frame.getMacOrigin(), secondaryFrame, ip, 6000, serverAppUI);
+                    manager.run();
                 } else {
                     System.err.println("Error al aguregar dispositivo a la tabla ARP");
                 }

@@ -7,6 +7,12 @@ public class NetworkFrame implements Serializable {
     private String message;
     private String macOrigin;
     private String macDestiny;
+    /*
+     * 1. Connect Device
+     * 2. Get Devices
+     * 3. Client Message
+     * 4. Switch Message
+     * */
     private int type;
 
     public NetworkFrame(int type, String macOrigin) {
@@ -28,6 +34,10 @@ public class NetworkFrame implements Serializable {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getType() {

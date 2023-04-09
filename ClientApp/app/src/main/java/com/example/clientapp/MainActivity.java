@@ -17,8 +17,15 @@ import android.widget.ToggleButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import NetworkManagement.AddressManager;
 import NetworkManagement.Client;
+import NetworkManagement.MessageManager;
 import NetworkManagement.NetworkFrame;
 import UIManagement.MACAddressDialog;
 
@@ -105,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                     System.out.println("Estableciendo Conexión al Switch");
                     if(MAC != null && addressManager.isMacAdress(MAC)) {
                         btnSetMacAddress.setEnabled(false);
+                        NetworkFrame connectDeviceFrame = new NetworkFrame(1, addressManager.getMacAddress(MAC));
+                        Client connectMessage = new Client(SERVER_IP, SERVER_PORT, connectDeviceFrame);
+                        connectMessage.run();
+
                     } else {
                         toastNotification("MAC Origen Inválida");
                         btnConnect.setChecked(false);
@@ -115,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                 }
             }
         });
+
+
+        // Start MessageManager
+        MessageManager messageManager = new MessageManager(txtTextArea);
+        new Thread(conn).start();
 
         // Solve Connection Error
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
@@ -157,7 +173,40 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         toast.show();
     }
 
-    public void appendText(String text) {
-        txtTextArea.append(text);
-    }
+    private ServerSocket serverSocket;
+
+    Runnable conn = new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("Antes del XD");
+            try {
+                System.out.println("XDDDDD");
+                serverSocket = new ServerSocket(6000);
+                System.out.println("Escuchando en 6000...");
+                while(true) {
+                    System.out.println(":D");
+                    Socket socket = serverSocket.accept();
+                    System.out.println(":o");
+
+                    // get the input stream from the connected socket
+                    InputStream input = socket.getInputStream();
+                    ObjectInputStream objectInputStream = new ObjectInputStream(input);
+
+                    // get the object (Network Frame)
+                    NetworkFrame frame = (NetworkFrame) objectInputStream.readObject();
+
+
+                    if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
+                        txtTextArea.append(frame.renderMessage());
+                    } else if(frame.getType() == 1) {                   // Add device response
+                        txtTextArea.append(frame.getMessage());
+                    }
+
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    };
+
 }

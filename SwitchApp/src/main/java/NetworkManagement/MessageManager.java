@@ -1,5 +1,7 @@
 package NetworkManagement;
 
+import UI.ServerAppUI;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -11,20 +13,24 @@ public class MessageManager implements Runnable {
     private NetworkFrame frame;
     private String clientIp;
     private int clientPort;
+    private ServerAppUI serverAppUI;
 
     @Override
     public void run() {
         connect();
+        serverAppUI.updateArpTable();
     }
 
-    public MessageManager(String macAddress, NetworkFrame frame, String clientIp, int clientPort) {
+    public MessageManager(String macAddress, NetworkFrame frame, String clientIp, int clientPort, ServerAppUI serverAppUI) {
         this.macAddress = macAddress;
         this.frame = frame;
         this.clientIp = clientIp;
         this.clientPort = clientPort;
+        this.serverAppUI = serverAppUI;
     }
 
     private void connect() {
+        System.out.println("IP: " + clientIp + " - port: " + clientPort);
         try (Socket socket = new Socket(clientIp, clientPort)) {
 
             System.out.println("Enviando respuesta a " + macAddress);
@@ -37,7 +43,8 @@ public class MessageManager implements Runnable {
             objectOutputStream.close();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error al Enviar Mensaje: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
