@@ -25,6 +25,10 @@ public class ARPNode {
         return enabled;
     }
 
+    public String getEnabled() {
+        return "" + enabled;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

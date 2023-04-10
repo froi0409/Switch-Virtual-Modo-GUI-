@@ -22,23 +22,41 @@ public class ARPTable {
         // verify that the MAC address is not added
         for (ARPNode arpNode: arpTable) {
             if(node.getMac().equals(arpNode.getMac())) {
+                if(!arpNode.isEnabled() && arpNode.getIp().equals(node.getIp())) {
+                    arpNode.setEnabled(true);
+                    appUI.updateArpTable(getTableModel());
+                    return true;
+                }
                 return false;
             }
         }
         arpTable.add(node);
+        node.setEnabled(true);
         appUI.updateArpTable(getTableModel());
         return true;
     }
 
+    public boolean disconnectDevice(String mac) {
+        for(ARPNode arpNode : arpTable) {
+            if(arpNode.getMac().equals(mac)) {
+                arpNode.setEnabled(false);
+                appUI.updateArpTable(getTableModel());
+                return true;
+            }
+        }
+        return false;
+    }
+
     public DefaultTableModel getTableModel() {
-        String[] columnTitles = {"Interface (IP)", "MAC Address"};
-        String[] devices = new String[2];
+        String[] columnTitles = {"Interface (IP)", "MAC Address", "Enabled"};
+        String[] devices = new String[3];
 
         DefaultTableModel model = new DefaultTableModel(null, columnTitles);
 
         for(ARPNode node : arpTable) {
             devices[0] = node.getIp();
             devices[1] = node.getMac();
+            devices[2] = node.getEnabled();
             System.out.println(devices[0] + " - " + devices[1]);
             model.addRow(devices);
         }
@@ -48,7 +66,7 @@ public class ARPTable {
 
     public ARPNode getDevice(String mac) {
         for(ARPNode node : arpTable) {
-            if(node.getMac().equals(mac)) return node;
+            if(node.getMac().equals(mac) && node.isEnabled()) return node;
         }
         return null;
     }

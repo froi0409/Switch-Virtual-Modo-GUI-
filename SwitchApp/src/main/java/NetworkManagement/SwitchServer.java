@@ -46,7 +46,20 @@ public class SwitchServer {
 
 
 
-            if(frame.getType() == 1) {
+            if (frame.getType() == 0) {
+                serverAppUI.appendOutputText("Se está intentando desconectar la siguiente MAC");
+                serverAppUI.appendOutputText("MAC: " + frame.getMacOrigin());
+                serverAppUI.appendOutputText("Esperando respuesta del switch");
+
+                NetworkFrame feedbackFrame = new NetworkFrame(0, frame.getMacOrigin());
+                if(arpTable.disconnectDevice(frame.getMacOrigin())) {
+                    feedbackFrame.setMessage("Se desconectó con éxito el dispositivo");
+                } else {
+                    feedbackFrame.setMessage("No fue posible desconectar el dispositivo");
+                }
+                MessageManager messageManager = new MessageManager(frame.getMacOrigin(), feedbackFrame, ip, clientServerPort, serverAppUI);
+                messageManager.run();
+            } else if(frame.getType() == 1) {
                 ARPNode node = new ARPNode(ip, port, frame.getMacOrigin(), false);
                 serverAppUI.appendOutputText("El siguiente dispositivo está intentando establecer conexión");
                 serverAppUI.appendOutputText("Interface (IP): " + ip);
@@ -78,9 +91,17 @@ public class SwitchServer {
 
                 ARPNode node;
                 if((node = arpTable.getDevice(frame.getMacDestiny())) != null) {
+                    // Send message to other device
                     MessageManager messageManager = new MessageManager(frame.getMacDestiny(), frame, node.getIp(), clientServerPort, serverAppUI);
                     messageManager.run();
+
+                    // Send feedback
+                    NetworkFrame feedbackFrame = new NetworkFrame(2,frame.getMacOrigin());
+                    feedbackFrame.setMessage("Yo:\n" + frame.getMessage());
+                    MessageManager messageOriginDevice = new MessageManager(frame.getMacOrigin(), feedbackFrame, ip, clientServerPort, serverAppUI);
+                    messageOriginDevice.run();
                 } else {
+                    // Cannot add device message
                     NetworkFrame secondaryFrame = new NetworkFrame(6, frame.getMacOrigin());
                     secondaryFrame.setMessage("El dispositivo " + frame.getMacDestiny() + " no existe en la tabla ARP");
                     MessageManager messageManager = new MessageManager(secondaryFrame.getMacOrigin(), secondaryFrame, ip, clientServerPort, serverAppUI);

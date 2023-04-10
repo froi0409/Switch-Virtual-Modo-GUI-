@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    System.out.println("Estableciendo Conexión al Switch");
                     if(MAC != null && addressManager.isMacAdress(MAC)) {
                         btnSetMacAddress.setEnabled(false);
                         NetworkFrame connectDeviceFrame = new NetworkFrame(1, addressManager.getMacAddress(MAC));
@@ -119,8 +118,10 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                         btnConnect.setChecked(false);
                     }
                 } else {
-                    System.out.println("Desconectando del Switch");
                     btnSetMacAddress.setEnabled(true);
+                    NetworkFrame disconnectDeviceFrame = new NetworkFrame(0, addressManager.getMacAddress(MAC));
+                    Client disconnectDevice = new Client(SERVER_IP, SERVER_PORT, disconnectDeviceFrame);
+                    disconnectDevice.run();
                 }
             }
         });
@@ -197,12 +198,15 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                                 frame = (NetworkFrame) objectInputStream.readObject();
                                 EditText txtArea = (EditText) findViewById(R.id.txtTextArea);
 
-                                if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
-                                    txtTextArea.append(frame.renderMessage());
-                                } else if(frame.getType() == 1) {                   // Add device response
-                                    //txtTextArea.append(frame.getMessage());
+                                if (frame.getType() == 0) {     // Disconnect device response
                                     txtArea.append(frame.getMessage() + "\n\n");
-                                } else if(frame.getType() == 5) {
+                                } else if(frame.getType() == 1) {                   // Add device response
+                                    txtArea.append(frame.getMessage() + "\n\n");
+                                } else if(frame.getType() == 2) {
+                                    txtArea.append(frame.getMessage() + "\n\n");
+                                } else if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
+                                    txtTextArea.append(frame.renderMessage());
+                                } else if(frame.getType() == 5) {                   // Cannot add device message
                                     ToggleButton btnConnect = (ToggleButton) findViewById(R.id.btnConnect);
                                     Button btnSetMacAddress = (Button) findViewById(R.id.btnSetMacAddress);
 

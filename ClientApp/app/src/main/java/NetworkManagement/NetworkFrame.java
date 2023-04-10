@@ -8,8 +8,9 @@ public class NetworkFrame implements Serializable {
     private String macOrigin;
     private String macDestiny;
     /*
+     * 0. Disconnect Device
      * 1. Connect Device
-     * 2. Get Devices
+     * 2. Own Client Message
      * 3. Client Message
      * 4. Switch Message
      * 5. Add Device Error
