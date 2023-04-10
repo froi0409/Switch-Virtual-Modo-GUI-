@@ -4,7 +4,14 @@
  */
 package UI;
 
+import NetworkManagement.ARPNode;
+import NetworkManagement.ARPTable;
+import NetworkManagement.MessageManager;
+import NetworkManagement.NetworkFrame;
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 /**
  *
@@ -12,12 +19,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ServerAppUI extends javax.swing.JFrame {
 
+    private ARPTable arpTable;
+
     /**
      * Creates new form ServerAppUI
      */
     public ServerAppUI() {
         initComponents();
         this.setLocationRelativeTo(null);
+        arpTable = new ARPTable(this);
     }
 
     /**
@@ -98,6 +108,12 @@ public class ServerAppUI extends javax.swing.JFrame {
         cmbUnicastDevice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbUnicastDeviceActionPerformed(evt);
+            }
+        });
+
+        cmbUnicastDevice.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cmbUnicastDeviceMouseClicked(evt);
             }
         });
 
@@ -206,18 +222,42 @@ public class ServerAppUI extends javax.swing.JFrame {
 
     public void updateArpTable(DefaultTableModel model) {
         tblArp.setModel(model);
+
+
     }
 
     private void txtUnicastMessageActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    private void cmbUnicastDeviceMouseClicked(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+        if(arpTable != null) {
+            cmbUnicastDevice.removeAllItems();
+            for(ARPNode node: arpTable.getArpTable()) {
+                if(node.isEnabled()) {
+                    cmbUnicastDevice.addItem(node.getMac());
+                }
+            }
+        }
+    }
+
     private void cmbUnicastDeviceActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+
     }
 
     private void btnSendUnicastActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        String mac = cmbUnicastDevice.getSelectedItem().toString();
+        String text = txtUnicastMessage.getText();
+
+        ARPNode node = arpTable.getDevice(mac);
+        NetworkFrame unicastFrame = new NetworkFrame(4, mac);
+        unicastFrame.setMessage(text);
+
+        MessageManager unicastMessage = new MessageManager(mac, unicastFrame, node.getIp(), 9090, this);
+        unicastMessage.run();
     }
 
     private void txtBroadcastMessageActionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,6 +266,10 @@ public class ServerAppUI extends javax.swing.JFrame {
 
     private void btnSendBroadcastActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+    }
+
+    public void setArpTable(ARPTable arpTable) {
+        this.arpTable = arpTable;
     }
 
     /**

@@ -71,4 +71,7 @@ public class ARPTable {
         return null;
     }
 
+    public ArrayList<ARPNode> getArpTable() {
+        return arpTable;
+    }
 }

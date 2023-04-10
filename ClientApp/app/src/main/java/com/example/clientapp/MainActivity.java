@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         setContentView(R.layout.activity_main);
 
         // ViewsById
-        btnSend = findViewById(R.id.btnSend);
-        btnSetMacAddress = findViewById(R.id.btnSetMacAddress);
-        btnConnect = findViewById(R.id.btnConnect);
+        btnSend = (FloatingActionButton) findViewById(R.id.btnSend);
+        btnSetMacAddress = (Button) findViewById(R.id.btnSetMacAddress);
+        btnConnect = (ToggleButton) findViewById(R.id.btnConnect);
         txtMessage = (EditText) findViewById(R.id.txtMessage);
-        txtTextArea = findViewById(R.id.txtTextArea);
-        txtMacDestiny = findViewById(R.id.txtMacDestiny);
+        txtTextArea = (EditText) findViewById(R.id.txtTextArea);
+        txtMacDestiny = (EditText) findViewById(R.id.txtMacDestiny);
 
         // Setting the Text color of the EditText
         txtMessage.setTextColor(Color.parseColor("#B66d38"));
@@ -204,8 +204,11 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                                     txtArea.append(frame.getMessage() + "\n\n");
                                 } else if(frame.getType() == 2) {
                                     txtArea.append(frame.getMessage() + "\n\n");
-                                } else if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
+                                } else if (frame.getType() == 3) { // Messages response
                                     txtTextArea.append(frame.renderMessage());
+                                } else if(frame.getType() == 4) {
+                                    txtArea.append("Switch Message:\n");
+                                    txtArea.append(frame.getMessage() + "\n\n");
                                 } else if(frame.getType() == 5) {                   // Cannot add device message
                                     ToggleButton btnConnect = (ToggleButton) findViewById(R.id.btnConnect);
                                     Button btnSetMacAddress = (Button) findViewById(R.id.btnSetMacAddress);
