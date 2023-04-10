@@ -82,9 +82,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                         Client client = new Client(SERVER_IP, SERVER_PORT, frame);
                         client.run();
 
-
                         txtMessage.setText("");
-                        txtTextArea.append(message + "\n");
                     } else {
                         // Invalid MAC destiny message
                         toastNotification("Dirección MAC de destino inválida");
@@ -200,10 +198,10 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                                 EditText txtArea = (EditText) findViewById(R.id.txtTextArea);
 
                                 if (frame.getType() == 3 || frame.getType() == 4) { // Messages response
-                                    //txtTextArea.append(frame.renderMessage());
+                                    txtTextArea.append(frame.renderMessage());
                                 } else if(frame.getType() == 1) {                   // Add device response
                                     //txtTextArea.append(frame.getMessage());
-                                    txtArea.append(frame.getMessage());
+                                    txtArea.append(frame.getMessage() + "\n\n");
                                 } else if(frame.getType() == 5) {
                                     ToggleButton btnConnect = (ToggleButton) findViewById(R.id.btnConnect);
                                     Button btnSetMacAddress = (Button) findViewById(R.id.btnSetMacAddress);
@@ -211,10 +209,10 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                                     // set initial properties
                                     btnConnect.setChecked(false);
                                     btnSetMacAddress.setEnabled(true);
-                                    txtArea.append(frame.getMessage());
+                                    txtArea.append(frame.getMessage() + "\n");
+                                } else if(frame.getType() == 6) {
+                                    txtArea.append(frame.getMessage() + "\n");
                                 }
-
-
 
                                 socket.close();
                             } catch (ClassNotFoundException | IOException e) {

@@ -18,6 +18,7 @@ public class MessageManager implements Runnable {
     @Override
     public void run() {
         connect();
+        serverAppUI.appendOutputText("El mensaje fue enviado con éxito");
     }
 
     public MessageManager(String macAddress, NetworkFrame frame, String clientIp, int clientPort, ServerAppUI serverAppUI) {

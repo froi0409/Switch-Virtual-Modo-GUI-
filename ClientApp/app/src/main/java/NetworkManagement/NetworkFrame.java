@@ -13,6 +13,7 @@ public class NetworkFrame implements Serializable {
      * 3. Client Message
      * 4. Switch Message
      * 5. Add Device Error
+     * 6. Cannot find device error
      * */
     private int type;
 
@@ -54,7 +55,7 @@ public class NetworkFrame implements Serializable {
     }
 
     public String renderMessage() {
-        String text = (type == 3) ? ("Mensaje Cliente\nOrigen: " + macOrigin) : "Mensaje Switch\n";
+        String text = (type == 3) ? ("Mensaje Cliente\nOrigen: " + macOrigin + "\n") : "Mensaje Switch\n";
         text += "Destino: " + macDestiny + "\n";
         text += message + "\n\n";
         return text;

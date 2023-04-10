@@ -46,4 +46,11 @@ public class ARPTable {
         return model;
     }
 
+    public ARPNode getDevice(String mac) {
+        for(ARPNode node : arpTable) {
+            if(node.getMac().equals(mac)) return node;
+        }
+        return null;
+    }
+
 }
