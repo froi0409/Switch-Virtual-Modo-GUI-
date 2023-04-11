@@ -82,7 +82,7 @@ public class SwitchServer {
                 }
 
                 serverAppUI.appendOutputText("");
-            } else if(frame.getType() == 3) { // Client Message
+            } else if(frame.getType() == 3) { // Client Broadcast Message
                 serverAppUI.appendOutputText("Se está intentando enviar un mensaje entre clientes");
                 serverAppUI.appendOutputText("MAC Origen: " + frame.getMacOrigin());
                 serverAppUI.appendOutputText("MAC Destino: " + frame.getMacDestiny());
@@ -90,27 +90,27 @@ public class SwitchServer {
                 serverAppUI.appendOutputText("CRC: ");
                 serverAppUI.appendOutputText("Esperando respuesta...");
 
-                ARPNode node;
-                if((node = arpTable.getDevice(frame.getMacDestiny())) != null) {
-                    // Send message to other device
-                    MessageManager messageManager = new MessageManager(frame.getMacDestiny(), frame, node.getIp(), clientServerPort, serverAppUI);
-                    messageManager.run();
-
-                    // Send feedback
-                    NetworkFrame feedbackFrame = new NetworkFrame(2,frame.getMacOrigin());
-                    feedbackFrame.setMessage("Yo:\n" + frame.getMessage());
-                    MessageManager messageOriginDevice = new MessageManager(frame.getMacOrigin(), feedbackFrame, ip, clientServerPort, serverAppUI);
-                    messageOriginDevice.run();
-                } else {
-                    // Cannot add device message
-                    NetworkFrame secondaryFrame = new NetworkFrame(6, frame.getMacOrigin());
-                    secondaryFrame.setMessage("El dispositivo " + frame.getMacDestiny() + " no existe en la tabla ARP");
-                    MessageManager messageManager = new MessageManager(secondaryFrame.getMacOrigin(), secondaryFrame, ip, clientServerPort, serverAppUI);
-                    messageManager.run();
-
+                // Send broadcast message
+                for(ARPNode node : arpTable.getArpTable()) {
+                    if(!node.getMac().equals(frame.getMacOrigin()) && node.isEnabled()) {
+                        serverAppUI.appendOutputText("Enviando Broadcast: " + node.getMac());
+                        MessageManager messageManager = new MessageManager(frame.getMacDestiny(), frame, node.getIp(), clientServerPort, serverAppUI);
+                        messageManager.run();
+                    }
                 }
 
                 serverAppUI.appendOutputText("");
+            } else if(frame.getType() == 4) { // Unicast Message
+                serverAppUI.appendOutputText("Se recibió respuesta de " + frame.getMacDestiny());
+                serverAppUI.appendOutputText("Enviando unicast a " + frame.getMacOrigin());
+                ARPNode node;
+                if(( node = arpTable.getDevice(frame.getMacDestiny())) != null) {
+                    MessageManager messageManager = new MessageManager(frame.getMacDestiny(), frame, node.getIp(), clientServerPort, serverAppUI);
+                    messageManager.run();
+
+                } else {
+                    serverAppUI.appendOutputText("Ocurrió un error al enviar el unicast message");
+                }
             }
 
             System.out.println();

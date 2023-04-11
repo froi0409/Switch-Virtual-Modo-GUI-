@@ -19,6 +19,7 @@ public class MessageManager implements Runnable {
     public void run() {
         connect();
         serverAppUI.appendOutputText("El mensaje fue enviado con éxito");
+        serverAppUI.appendOutputText("");
     }
 
     public MessageManager(String macAddress, NetworkFrame frame, String clientIp, int clientPort, ServerAppUI serverAppUI) {

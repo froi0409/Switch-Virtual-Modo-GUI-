@@ -28,6 +28,15 @@ public class ServerAppUI extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         arpTable = new ARPTable(this);
+        jLabel3.setVisible(false);
+        jLabel4.setVisible(false);
+        jLabel5.setVisible(false);
+        jLabel6.setVisible(false);
+        txtUnicastMessage.setVisible(false);
+        cmbUnicastDevice.setVisible(false);
+        btnSendUnicast.setVisible(false);
+        txtBroadcastMessage.setVisible(false);
+        btnSendBroadcast.setVisible(false);
     }
 
     /**

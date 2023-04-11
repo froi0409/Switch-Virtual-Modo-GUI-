@@ -8,13 +8,13 @@ public class NetworkFrame implements Serializable {
     private String macOrigin;
     private String macDestiny;
     /*
-    * 1. Connect Device
-    * 2. Own Client Message
-    * 3. Client Message
-    * 4. Switch Message
-    * 5. Add Device Error
-    * 6. Cannot find device error
-    * */
+     * 1. Connect Device
+     * 2. Own Client Message
+     * 3. Client Message
+     * 4. Switch Unicast Message
+     * 5. Add Device Error
+     * 6. Cannot find device error
+     * */
     private int type;
 
     public NetworkFrame(int type, String macOrigin) {
@@ -32,6 +32,13 @@ public class NetworkFrame implements Serializable {
         this.macOrigin = macOrigin;
         this.macDestiny = macDestiny;
         this.type = 3;
+    }
+
+    public NetworkFrame(int type, String message, String macOrigin, String macDestiny) {
+        this.message = message;
+        this.macOrigin = macOrigin;
+        this.macDestiny = macDestiny;
+        this.type = type;
     }
 
     public String getMessage() {

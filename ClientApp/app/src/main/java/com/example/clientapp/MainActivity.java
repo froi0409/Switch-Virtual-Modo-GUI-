@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
     EditText txtTextArea;
     private String[] MAC;
 
+    // Variables
+    String SERVER_IP = "192.168.137.1";
+    int SERVER_PORT = 6868;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +68,7 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
         txtMessage.setText("");
         txtMacDestiny.setText("");
 
-        // Variables
-        String SERVER_IP = "192.168.137.1";
-        int SERVER_PORT = 6868;
+
 
         // Listeners
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -205,9 +207,17 @@ public class MainActivity extends AppCompatActivity implements MACAddressDialog.
                                 } else if(frame.getType() == 2) {
                                     txtArea.append(frame.getMessage() + "\n\n");
                                 } else if (frame.getType() == 3) { // Messages response
-                                    txtTextArea.append(frame.renderMessage());
+                                    // Accept broadcast message
+                                    if(frame.getMacDestiny().equals(addressManager.getMacAddress(MAC))) {
+                                        txtTextArea.append(frame.renderMessage());
+
+                                        // send response message
+                                        NetworkFrame responseFrame = new NetworkFrame(4, frame.getMessage(),frame.getMacDestiny(), frame.getMacOrigin());
+                                        Client clientResponse = new Client(SERVER_IP, SERVER_PORT, responseFrame);
+                                        clientResponse.run();
+                                    }
                                 } else if(frame.getType() == 4) {
-                                    txtArea.append("Switch Message:\n");
+                                    txtArea.append("Yo:\n");
                                     txtArea.append(frame.getMessage() + "\n\n");
                                 } else if(frame.getType() == 5) {                   // Cannot add device message
                                     ToggleButton btnConnect = (ToggleButton) findViewById(R.id.btnConnect);
