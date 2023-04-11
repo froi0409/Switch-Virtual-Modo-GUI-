@@ -5,6 +5,7 @@ import UI.ServerAppUI;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.zip.CRC32;
 
 public class SwitchServer {
     private int clientServerPort;
@@ -87,7 +88,7 @@ public class SwitchServer {
                 serverAppUI.appendOutputText("MAC Origen: " + frame.getMacOrigin());
                 serverAppUI.appendOutputText("MAC Destino: " + frame.getMacDestiny());
                 serverAppUI.appendOutputText("Datos (Mensaje): " + frame.getMessage());
-                serverAppUI.appendOutputText("CRC: ");
+                serverAppUI.appendOutputText("CRC: " + getCrc(frame.getMessage()));
                 serverAppUI.appendOutputText("Esperando respuesta...");
 
                 // Send broadcast message
@@ -115,5 +116,11 @@ public class SwitchServer {
 
             System.out.println();
         }
+    }
+
+    private String getCrc(String data) {
+        CRC32 crc = new CRC32();
+        crc.update(data.getBytes());
+        return String.valueOf(crc.getValue());
     }
 }
