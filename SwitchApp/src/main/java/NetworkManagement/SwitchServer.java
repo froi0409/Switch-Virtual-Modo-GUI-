@@ -88,7 +88,7 @@ public class SwitchServer {
                 serverAppUI.appendOutputText("MAC Origen: " + frame.getMacOrigin());
                 serverAppUI.appendOutputText("MAC Destino: " + frame.getMacDestiny());
                 serverAppUI.appendOutputText("Datos (Mensaje): " + frame.getMessage());
-                serverAppUI.appendOutputText("CRC: " + getCrc(frame.getMessage()));
+                serverAppUI.appendOutputText("CRC: " + frame.getCrc());
                 serverAppUI.appendOutputText("Esperando respuesta...");
 
                 // Send broadcast message
@@ -102,8 +102,8 @@ public class SwitchServer {
 
                 serverAppUI.appendOutputText("");
             } else if(frame.getType() == 4) { // Unicast Message
-                serverAppUI.appendOutputText("Se recibió respuesta de " + frame.getMacDestiny());
-                serverAppUI.appendOutputText("Enviando unicast a " + frame.getMacOrigin());
+                serverAppUI.appendOutputText("Se recibió respuesta de " + frame.getMacOrigin());
+                serverAppUI.appendOutputText("Enviando unicast a " + frame.getMacDestiny());
                 ARPNode node;
                 if(( node = arpTable.getDevice(frame.getMacDestiny())) != null) {
                     MessageManager messageManager = new MessageManager(frame.getMacDestiny(), frame, node.getIp(), clientServerPort, serverAppUI);
